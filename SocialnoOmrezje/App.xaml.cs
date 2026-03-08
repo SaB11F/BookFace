@@ -14,8 +14,10 @@ namespace SocialnoOmrezje
         {
             base.OnStartup(e);
 
-            var currentUser = XmlDataService.Load() ?? CreateDefaultUser();
+            var defaultProfileImagePath = GetDefaultProfileImagePath();
+            var currentUser = XmlDataService.Load() ?? CreateDefaultUser(defaultProfileImagePath);
             UserSettingsService.Apply(currentUser);
+            EnsureProfileImage(currentUser, defaultProfileImagePath);
 
             var vm = new MainViewModel(currentUser);
 
@@ -50,13 +52,8 @@ namespace SocialnoOmrezje
             base.OnExit(e);
         }
 
-        private static User CreateDefaultUser()
+        private static User CreateDefaultUser(string defaultImagePath)
         {
-            var defaultImagePath = Path.Combine(
-                AppDomain.CurrentDomain.BaseDirectory,
-                "Images",
-                "default-profile.png");
-
             var user = new User
             {
                 Name = "Mark Zuckerberg",
@@ -90,6 +87,17 @@ namespace SocialnoOmrezje
             user.Posts.Add(post2);
 
             return user;
+        }
+
+        private static string GetDefaultProfileImagePath()
+            => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", "default-profile.png");
+
+        private static void EnsureProfileImage(User user, string defaultProfileImagePath)
+        {
+            if (string.IsNullOrWhiteSpace(user.ProfileImage) && File.Exists(defaultProfileImagePath))
+            {
+                user.ProfileImage = defaultProfileImagePath;
+            }
         }
     }
 }

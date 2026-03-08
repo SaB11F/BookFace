@@ -38,18 +38,9 @@
 
             <StackPanel Grid.Column="0" Margin="10">
                 <Border BorderBrush="LightGray" BorderThickness="1" Padding="8">
-                    <Image Height="220" Stretch="Uniform">
-                        <Image.Style>
-                            <Style TargetType="Image">
-                                <Setter Property="Source" Value="{Binding CurrentUser.ProfileImage}"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding CurrentUser.ProfileImage}" Value="">
-                                        <Setter Property="Source" Value="Images/default-profile.png"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Image.Style>
-                    </Image>
+                    <Image Height="220"
+                           Stretch="Uniform"
+                           Source="{Binding CurrentUser.ProfileImage}"/>
                 </Border>
 
                 <TextBlock Text="{Binding CurrentUser.Name}"
@@ -95,7 +86,10 @@
 
                                             <TextBlock Text="{Binding Location}" FontStyle="Italic" FontSize="11"/>
                                             <TextBlock Text="{Binding CreatedAt}" FontSize="10"/>
-                                            <TextBlock Text="{Binding Likes, StringFormat=Vsecki: {0}}" FontSize="10" Margin="0,2,0,0"/>
+                                            <TextBlock FontSize="10" Margin="0,2,0,0">
+                                                <Run Text="Vsecki: "/>
+                                                <Run Text="{Binding Likes}"/>
+                                            </TextBlock>
 
                                             <TextBlock Text="Brez oznacenih prijateljev"
                                                        FontSize="10"

@@ -1,0 +1,67 @@
+﻿<Window x:Class="SocialnoOmrezje.Views.FriendsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Urejanje prijateljev"
+        Height="420"
+        Width="420"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner">
+
+    <Grid Margin="14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Prijatelj" FontWeight="SemiBold"/>
+
+        <Grid Grid.Row="1" Margin="0,8,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <ListBox x:Name="FriendsListBox"
+                     MinWidth="220"
+                     Margin="0,0,10,0"
+                     SelectionChanged="FriendsListBox_SelectionChanged"/>
+
+            <StackPanel Grid.Column="1" Width="140">
+                <TextBox x:Name="FriendNameTextBox"
+                         Margin="0,0,0,8"/>
+
+                <Button Margin="0,0,0,6" Click="AddFriend_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;" Margin="0,0,6,0"/>
+                        <TextBlock Text="Dodaj"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Margin="0,0,0,6" Click="UpdateFriend_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE70F;" Margin="0,0,6,0"/>
+                        <TextBlock Text="Uredi"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Click="RemoveFriend_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74D;" Margin="0,0,6,0"/>
+                        <TextBlock Text="Odstrani"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <Button Grid.Row="2"
+                Width="90"
+                HorizontalAlignment="Right"
+                Click="Close_Click">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE711;" Margin="0,0,6,0"/>
+                <TextBlock Text="Zapri"/>
+            </StackPanel>
+        </Button>
+    </Grid>
+</Window>

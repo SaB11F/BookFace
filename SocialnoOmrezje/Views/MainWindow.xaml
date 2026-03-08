@@ -1,0 +1,231 @@
+﻿<Window x:Class="SocialnoOmrezje.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Socialno Omrezje"
+        Height="650"
+        Width="1080"
+        MinWidth="900"
+        MinHeight="560">
+
+    <DockPanel>
+
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Datoteka">
+                <MenuItem Header="Prijatelji" Click="OpenFriendsWindow_Click"/>
+                <Separator/>
+                <MenuItem Header="Uvozi..." Click="ImportXml_Click"/>
+                <MenuItem Header="Izvozi..." Click="ExportXml_Click"/>
+                <Separator/>
+                <MenuItem Header="Izhod" Click="Exit_Click"/>
+            </MenuItem>
+
+            <MenuItem Header="Objave">
+                <MenuItem Header="Dodaj" Click="AddPost_Click"/>
+                <MenuItem Header="Odstrani"
+                          Click="RemovePost_Click"
+                          IsEnabled="{Binding CanRemovePost}"/>
+                <MenuItem Header="Uredi"
+                          Click="EditPost_Click"
+                          IsEnabled="{Binding CanEditPost}"/>
+            </MenuItem>
+        </Menu>
+
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="280"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Margin="10">
+                <Border BorderBrush="LightGray" BorderThickness="1" Padding="8">
+                    <Image Height="220" Stretch="Uniform">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Setter Property="Source" Value="{Binding CurrentUser.ProfileImage}"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentUser.ProfileImage}" Value="">
+                                        <Setter Property="Source" Value="Images/default-profile.png"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                </Border>
+
+                <TextBlock Text="{Binding CurrentUser.Name}"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           Margin="0,12,0,6"/>
+
+                <TextBlock Text="{Binding CurrentUser.Bio}"
+                           TextWrapping="Wrap"/>
+            </StackPanel>
+
+            <TabControl Grid.Column="1" Margin="10">
+                <TabItem Header="Zid">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <ListView Grid.Row="0"
+                                  ItemsSource="{Binding CurrentUser.Posts}"
+                                  SelectedItem="{Binding SelectedPost}"
+                                  MouseDoubleClick="PostsListView_DoubleClick">
+
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="5" Padding="8" BorderThickness="1">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="White"/>
+                                                <Setter Property="BorderBrush" Value="LightGray"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding TaggedFriends.Count}" Value="0">
+                                                        <Setter Property="BorderBrush" Value="DarkOrange"/>
+                                                        <Setter Property="Background" Value="#FFFFF8EA"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Content}" FontWeight="Bold" TextWrapping="Wrap"/>
+
+                                            <TextBlock Text="{Binding Location}" FontStyle="Italic" FontSize="11"/>
+                                            <TextBlock Text="{Binding CreatedAt}" FontSize="10"/>
+                                            <TextBlock Text="{Binding Likes, StringFormat=Vsecki: {0}}" FontSize="10" Margin="0,2,0,0"/>
+
+                                            <TextBlock Text="Brez oznacenih prijateljev"
+                                                       FontSize="10"
+                                                       Foreground="DarkOrange"
+                                                       Margin="0,3,0,0">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding TaggedFriends.Count}" Value="0">
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+
+                                            <TextBlock Text="Oznaceni prijatelji:" FontSize="10" Margin="0,5,0,0"/>
+                                            <ItemsControl ItemsSource="{Binding TaggedFriends}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding}" FontSize="10"/>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                        <Button Grid.Row="1"
+                                Margin="0,10,0,0"
+                                HorizontalAlignment="Right"
+                                Padding="10,5"
+                                Click="AddPost_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;" Margin="0,0,6,0"/>
+                                <TextBlock Text="Dodaj objavo"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </TabItem>
+
+                <TabItem Header="O meni">
+                    <StackPanel Margin="10">
+                        <TextBlock Text="Ime"/>
+                        <TextBox Margin="0,0,0,10"
+                                 Text="{Binding CurrentUser.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Text="Opis"/>
+                        <TextBox Height="90"
+                                 Margin="0,0,0,10"
+                                 TextWrapping="Wrap"
+                                 AcceptsReturn="True"
+                                 Text="{Binding CurrentUser.Bio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Text="Profilna slika"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <TextBox Width="360"
+                                     IsReadOnly="True"
+                                     Text="{Binding CurrentUser.ProfileImage, Mode=TwoWay}"/>
+                            <Button Margin="6,0,0,0" Click="SelectProfileImage_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8B7;" Margin="0,0,6,0"/>
+                                    <TextBlock Text="Izberi"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+                        <Button Width="190"
+                                HorizontalAlignment="Right"
+                                Padding="8,5"
+                                Click="SaveProfile_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74E;" Margin="0,0,6,0"/>
+                                <TextBlock Text="Shrani spremembe"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </TabItem>
+
+                <TabItem Header="Prijatelji">
+                    <StackPanel Margin="10">
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox x:Name="FriendSearchTextBox"
+                                     Grid.Column="0"
+                                     Margin="0,0,6,0"
+                                     TextChanged="FriendSearchTextBox_TextChanged"/>
+
+                            <Button Grid.Column="1" Click="OpenFriendsWindow_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8A5;" Margin="0,0,6,0"/>
+                                    <TextBlock Text="Uredi"/>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+
+                        <ListBox x:Name="FriendsListBox" ItemsSource="{Binding CurrentUser.Friends}"/>
+                    </StackPanel>
+                </TabItem>
+
+                <TabItem Header="Slike">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding CurrentUser.Posts}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="LightGray" BorderThickness="1" Margin="6" Padding="6" Width="170">
+                                        <StackPanel>
+                                            <Image Height="110" Stretch="UniformToFill" Source="{Binding ImagePath}"/>
+                                            <TextBlock Margin="0,6,0,0" Text="{Binding Content}" TextWrapping="Wrap" FontSize="11"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </DockPanel>
+</Window>

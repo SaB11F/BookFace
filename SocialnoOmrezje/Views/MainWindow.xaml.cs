@@ -31,6 +31,7 @@ namespace SocialnoOmrezje.Views
             if (window.ShowDialog() == true && window.NewPost != null)
             {
                 vm.CurrentUser.Posts.Add(window.NewPost);
+                SaveState(vm);
             }
         }
 
@@ -47,7 +48,10 @@ namespace SocialnoOmrezje.Views
                 Owner = this
             };
 
-            window.ShowDialog();
+            if (window.ShowDialog() == true)
+            {
+                SaveState(vm);
+            }
         }
 
         private void RemovePost_Click(object sender, RoutedEventArgs e)
@@ -55,6 +59,7 @@ namespace SocialnoOmrezje.Views
             if (DataContext is MainViewModel vm)
             {
                 vm.RemovePost();
+                SaveState(vm);
             }
         }
 
@@ -84,6 +89,7 @@ namespace SocialnoOmrezje.Views
 
             window.ShowDialog();
             RefreshFriendFilter();
+            SaveState(vm);
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
@@ -118,6 +124,7 @@ namespace SocialnoOmrezje.Views
 
                 vm.ApplyUserData(loadedUser);
                 RefreshFriendFilter();
+                SaveState(vm);
             }
             catch (Exception ex)
             {
@@ -163,8 +170,7 @@ namespace SocialnoOmrezje.Views
 
             try
             {
-                UserSettingsService.Save(vm.CurrentUser);
-                XmlDataService.Save(vm.CurrentUser);
+                SaveState(vm);
                 MessageBox.Show("Podatki uporabnika so bili shranjeni.");
             }
             catch (Exception ex)
@@ -188,6 +194,7 @@ namespace SocialnoOmrezje.Views
             if (dialog.ShowDialog() == true)
             {
                 vm.CurrentUser.ProfileImage = dialog.FileName;
+                SaveState(vm);
             }
         }
 
@@ -220,6 +227,12 @@ namespace SocialnoOmrezje.Views
             }
 
             view.Refresh();
+        }
+
+        private static void SaveState(MainViewModel vm)
+        {
+            XmlDataService.Save(vm.CurrentUser);
+            UserSettingsService.Save(vm.CurrentUser);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace SocialnoOmrezje.Views
             {
                 LoadPost(_editingPost);
                 Title = "Uredi objavo";
-                ConfirmButton.Content = "Shrani";
+                ConfirmButtonText.Text = "Shrani";
             }
         }
 

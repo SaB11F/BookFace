@@ -81,7 +81,7 @@ namespace SocialnoOmrezje
                 Location = "Maribor",
                 Likes = 31,
                 CreatedAt = DateTime.Now.AddHours(-6)
-            };
+            };  
 
             user.Posts.Add(post1);
             user.Posts.Add(post2);

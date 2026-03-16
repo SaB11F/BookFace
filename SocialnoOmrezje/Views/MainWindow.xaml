@@ -84,6 +84,25 @@
                                         <StackPanel>
                                             <TextBlock Text="{Binding Content}" FontWeight="Bold" TextWrapping="Wrap"/>
 
+                                            <Image Margin="0,8,0,8"
+                                                   MaxHeight="220"
+                                                   Stretch="Uniform"
+                                                   Source="{Binding ImagePath}">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding ImagePath}" Value="">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding ImagePath}" Value="{x:Null}">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
+
                                             <TextBlock Text="{Binding Location}" FontStyle="Italic" FontSize="11"/>
                                             <TextBlock Text="{Binding CreatedAt}" FontSize="10"/>
                                             <TextBlock FontSize="10" Margin="0,2,0,0">
